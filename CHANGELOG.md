@@ -1,3 +1,9 @@
+## 0.4.1 (2026-03-21)
+
+### Refactor
+
+- **src**: add empty init file
+
 ## 0.4.0 (2026-03-21)
 
 ### Feat
