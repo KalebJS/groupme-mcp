@@ -1,3 +1,9 @@
+## 0.4.0 (2026-03-21)
+
+### Feat
+
+- **main.py**: friendly missing env var message
+
 ## 0.3.0 (2026-03-21)
 
 ### Feat
