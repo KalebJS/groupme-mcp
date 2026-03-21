@@ -19,7 +19,7 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that wr
 ## Requirements
 
 - Python 3.12+
-- A GroupMe access token — get one at [dev.groupme.com](https://dev.groupme.com)
+- A GroupMe access token — get one at [dev.groupme.com](https://dev.groupme.com) or use the [OAuth helper](#getting-a-token)
 
 ## Usage
 
@@ -51,6 +51,20 @@ cd groupme-mcp
 export GROUPME_TOKEN=<your-token>
 uv run mcp dev main.py   # opens MCP Inspector in browser
 ```
+
+## Getting a Token
+
+`oauth/get_token.py` runs a local OAuth flow using only the Python stdlib — no extra dependencies.
+
+1. Create an application at [dev.groupme.com/applications](https://dev.groupme.com/applications).
+2. Set the callback URL to `http://localhost:8080/callback`.
+3. Run the helper:
+
+```bash
+python oauth/get_token.py --client-id YOUR_CLIENT_ID
+```
+
+The script opens your browser, waits for the GroupMe redirect, and prints the token along with the `export` command to set it.
 
 ## Development
 
