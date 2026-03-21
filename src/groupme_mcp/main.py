@@ -1,4 +1,4 @@
-from server import mcp
+from groupme_mcp.server import mcp
 
 
 def main() -> None:

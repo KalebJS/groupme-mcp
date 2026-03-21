@@ -5,8 +5,8 @@ from pytest_httpx import HTTPXMock
 
 os.environ.setdefault("GROUPME_TOKEN", "test-token")
 
-from client import BASE_URL
-from client import GroupMeClient
+from groupme_mcp.client import BASE_URL
+from groupme_mcp.client import GroupMeClient
 
 TOKEN = "test-token"
 BASE = BASE_URL

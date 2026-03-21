@@ -2,7 +2,7 @@ import uuid
 
 from mcp.server.fastmcp import FastMCP
 
-from client import GroupMeClient
+from groupme_mcp.client import GroupMeClient
 
 mcp = FastMCP("GroupMe")
 client = GroupMeClient()

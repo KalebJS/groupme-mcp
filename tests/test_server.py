@@ -4,7 +4,7 @@ import pytest
 
 os.environ.setdefault("GROUPME_TOKEN", "test-token")
 
-from server import mcp
+from groupme_mcp.server import mcp
 
 EXPECTED_TOOLS = {
     # Groups
@@ -60,7 +60,7 @@ def test_tools_have_descriptions():
 
 @pytest.mark.asyncio
 async def test_send_message_autogenerates_guid(httpx_mock):
-    from server import send_message
+    from groupme_mcp.server import send_message
 
     httpx_mock.add_response(status_code=201, json={"response": {"message": {"id": "1"}}})
     await send_message(group_id="123", text="hi")
@@ -73,7 +73,7 @@ async def test_send_message_autogenerates_guid(httpx_mock):
 
 @pytest.mark.asyncio
 async def test_send_direct_message_autogenerates_guid(httpx_mock):
-    from server import send_direct_message
+    from groupme_mcp.server import send_direct_message
 
     httpx_mock.add_response(status_code=201, json={"response": {"direct_message": {"id": "1"}}})
     await send_direct_message(recipient_id="user-1", text="hey")
