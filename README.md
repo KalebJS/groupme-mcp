@@ -41,8 +41,6 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 }
 ```
 
-> Until published to PyPI, use `uv run` with `--directory` pointing to a local clone instead of `uvx`.
-
 ### Local development
 
 ```bash
