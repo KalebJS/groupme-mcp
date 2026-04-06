@@ -16,6 +16,16 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that wr
 | **Users** | `get_me`, `update_user` |
 | **Blocks** | `list_blocks`, `check_block`, `create_block`, `delete_block` |
 
+## Skill
+
+Install the companion skill to give Claude built-in knowledge of GroupMe workflows — group name resolution, message pagination, the async `add_members` flow, and more — without needing to prompt it each time.
+
+The skill folder lives at [`skill/groupme-mcp/`](skill/groupme-mcp/).
+
+**Install in Claude.ai:** Settings → Capabilities → Skills → Upload skill → select the `skill/groupme-mcp/` folder (zipped).
+
+**Install in Claude Code:** place the `skill/groupme-mcp/` folder in your Claude Code skills directory.
+
 ## Requirements
 
 - Python 3.12+
