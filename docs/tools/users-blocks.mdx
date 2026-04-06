@@ -1,0 +1,138 @@
+---
+title: "Users & Blocks"
+description: "Tools for viewing and updating your profile, and for managing blocked users."
+---
+
+Use these tools to read or update the authenticated user's profile, and to view, check, create, or remove blocks between users.
+
+## Users
+
+### get_me
+
+Get the authenticated user's profile information.
+
+This tool takes no parameters.
+
+**Example usage**
+
+> "What is my GroupMe user ID and display name?"
+
+```text
+get_me()
+```
+
+---
+
+### update_user
+
+Update the authenticated user's profile. Only the fields you provide are changed.
+
+<ParamField path="avatar_url" type="string">
+  New avatar image URL.
+</ParamField>
+
+<ParamField path="name" type="string">
+  New display name.
+</ParamField>
+
+<ParamField path="email" type="string">
+  New email address.
+</ParamField>
+
+<ParamField path="zip_code" type="string">
+  New zip code.
+</ParamField>
+
+**Example usage**
+
+> "Update my display name to 'Alex' and my zip code to '10001'."
+
+```text
+update_user(name="Alex", zip_code="10001")
+```
+
+---
+
+## Blocks
+
+### list_blocks
+
+List all users blocked by a given user.
+
+<ParamField path="user_id" type="string" required>
+  The ID of the user whose block list to retrieve.
+</ParamField>
+
+**Example usage**
+
+> "Show the block list for user 1234567."
+
+```text
+list_blocks(user_id="1234567")
+```
+
+---
+
+### check_block
+
+Check if a block exists between two users.
+
+<ParamField path="user_id" type="string" required>
+  The ID of the first user.
+</ParamField>
+
+<ParamField path="other_user_id" type="string" required>
+  The ID of the second user.
+</ParamField>
+
+**Example usage**
+
+> "Is there a block between user 1234567 and user 9876543?"
+
+```text
+check_block(user_id="1234567", other_user_id="9876543")
+```
+
+---
+
+### create_block
+
+Block a user.
+
+<ParamField path="user_id" type="string" required>
+  The ID of the user doing the blocking.
+</ParamField>
+
+<ParamField path="other_user_id" type="string" required>
+  The ID of the user to block.
+</ParamField>
+
+**Example usage**
+
+> "Block user 9876543 on behalf of user 1234567."
+
+```text
+create_block(user_id="1234567", other_user_id="9876543")
+```
+
+---
+
+### delete_block
+
+Unblock a user.
+
+<ParamField path="user_id" type="string" required>
+  The ID of the user doing the unblocking.
+</ParamField>
+
+<ParamField path="other_user_id" type="string" required>
+  The ID of the user to unblock.
+</ParamField>
+
+**Example usage**
+
+> "Unblock user 9876543 for user 1234567."
+
+```text
+delete_block(user_id="1234567", other_user_id="9876543")
+```

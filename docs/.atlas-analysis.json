@@ -1,0 +1,77 @@
+{
+  "projectType": "general",
+  "projectName": "GroupMe MCP",
+  "projectDescription": "An MCP server that wraps the GroupMe API v3, enabling AI assistants to read and send messages, manage groups, interact with bots, and more.",
+  "theme": "luma",
+  "primaryColor": "#7c7c7c",
+  "lightColor": "#070707",
+  "darkColor": "#d3d3d3",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": ["introduction", "quickstart", "authentication"]
+          },
+          {
+            "group": "Tool Reference",
+            "pages": [
+              "tools/groups",
+              "tools/members",
+              "tools/messages",
+              "tools/bots",
+              "tools/users-blocks"
+            ]
+          },
+          {
+            "group": "Development",
+            "pages": ["development/contributing", "development/architecture"]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Full GroupMe API v3 coverage via MCP tools",
+    "Works with Claude Desktop and any MCP-compatible AI client",
+    "Read and send group and direct messages",
+    "Manage groups, members, and bots",
+    "Like/unlike messages",
+    "Block/unblock users",
+    "OAuth helper for token acquisition",
+    "Duplicate-send prevention via source_guid"
+  ],
+  "publicApiSurface": [
+    "list_groups",
+    "list_former_groups",
+    "get_group",
+    "create_group",
+    "update_group",
+    "destroy_group",
+    "join_group",
+    "rejoin_group",
+    "add_members",
+    "get_member_results",
+    "remove_member",
+    "update_membership",
+    "list_messages",
+    "send_message",
+    "list_direct_messages",
+    "send_direct_message",
+    "list_chats",
+    "like_message",
+    "unlike_message",
+    "create_bot",
+    "post_as_bot",
+    "list_bots",
+    "destroy_bot",
+    "get_me",
+    "update_user",
+    "list_blocks",
+    "check_block",
+    "create_block",
+    "delete_block"
+  ]
+}

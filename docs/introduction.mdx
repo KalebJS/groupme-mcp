@@ -1,0 +1,80 @@
+---
+title: "Introduction"
+description: "GroupMe MCP is an MCP server that wraps the GroupMe API v3, giving AI assistants full access to your GroupMe account."
+---
+
+GroupMe MCP is a [Model Context Protocol](https://modelcontextprotocol.io) server that wraps the [GroupMe API v3](https://dev.groupme.com/docs/v3). Connect it to Claude Desktop or any MCP-compatible AI client and give your assistant the ability to read messages, manage groups, send direct messages, automate bots, and more — all through natural conversation.
+
+<Note>
+  GroupMe MCP works with any MCP-compatible AI client. Claude Desktop is used in
+  the examples throughout this documentation, but the server runs over stdio and
+  is compatible with any host that supports the Model Context Protocol.
+</Note>
+
+## What is MCP?
+
+The [Model Context Protocol](https://modelcontextprotocol.io) is an open standard that lets AI assistants connect to external tools and data sources. An MCP server exposes a set of **tools** — functions the AI can call to take real actions in the world. GroupMe MCP acts as a bridge between your AI assistant and the GroupMe API.
+
+## What GroupMe MCP does
+
+GroupMe MCP gives your AI assistant 29 tools covering the full GroupMe API v3. Once connected, your assistant can:
+
+- Read and send messages in groups and direct message threads
+- Create, update, and manage groups and their members
+- Create bots and post messages on their behalf
+- Like and unlike messages
+- Manage your user profile and block list
+
+## Available tools
+
+### Groups
+
+`list_groups`, `list_former_groups`, `get_group`, `create_group`, `update_group`, `destroy_group`, `join_group`, `rejoin_group`
+
+### Members
+
+`add_members`, `get_member_results`, `remove_member`, `update_membership`
+
+### Messages
+
+`list_messages`, `send_message`
+
+### Direct messages
+
+`list_direct_messages`, `send_direct_message`
+
+### Chats
+
+`list_chats`
+
+### Likes
+
+`like_message`, `unlike_message`
+
+### Bots
+
+`create_bot`, `post_as_bot`, `list_bots`, `destroy_bot`
+
+### Users
+
+`get_me`, `update_user`
+
+### Blocks
+
+`list_blocks`, `check_block`, `create_block`, `delete_block`
+
+## Requirements
+
+- Python 3.12 or higher
+- A GroupMe access token — get one at [dev.groupme.com](https://dev.groupme.com) or use the included OAuth helper script
+
+## Get started
+
+<CardGroup cols={2}>
+  <Card title="Quick start" icon="rocket" href="/quickstart">
+    Install GroupMe MCP and connect it to Claude Desktop in minutes.
+  </Card>
+  <Card title="Authentication" icon="key" href="/authentication">
+    Get your GroupMe access token and learn how to pass it to the server.
+  </Card>
+</CardGroup>

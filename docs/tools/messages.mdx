@@ -1,0 +1,207 @@
+---
+title: "Messages"
+description: "Tools for reading and sending group messages, direct messages, and managing likes."
+---
+
+Use these tools to read message history, send messages to groups or individuals, manage direct message conversations, and like or unlike messages.
+
+<Note>
+  Both `send_message` and `send_direct_message` accept a `source_guid`
+  parameter. If you omit it, a UUID is auto-generated. The GroupMe API uses this
+  value to deduplicate sends — submitting the same `source_guid` twice will not
+  produce two messages.
+</Note>
+
+## list_messages
+
+Retrieve messages from a group.
+
+<ParamField path="group_id" type="string" required>
+  The ID of the group.
+</ParamField>
+
+<ParamField path="before_id" type="string">
+  Return messages created before this message ID. Use for backward pagination.
+</ParamField>
+
+<ParamField path="since_id" type="string">
+  Return messages created after this message ID. May skip messages if many were
+  sent since that ID.
+</ParamField>
+
+<ParamField path="after_id" type="string">
+  Return messages created immediately after this message ID.
+</ParamField>
+
+<ParamField path="limit" type="number" default="20">
+  Number of messages to return. Maximum is 100.
+</ParamField>
+
+**Example usage**
+
+> "Get the last 50 messages from group 1234567."
+
+```text
+list_messages(group_id="1234567", limit=50)
+```
+
+---
+
+## send_message
+
+Send a message to a group.
+
+<ParamField path="group_id" type="string" required>
+  The ID of the group.
+</ParamField>
+
+<ParamField path="text" type="string" required>
+  Message text. Maximum 1000 characters.
+</ParamField>
+
+<ParamField path="source_guid" type="string">
+  Unique ID to prevent duplicate sends. A UUID is auto-generated if you leave
+  this blank.
+</ParamField>
+
+<ParamField path="attachments" type="object[]">
+  Optional list of attachment objects (image, location, emoji, etc.). Each
+  attachment type requires a different shape — refer to the GroupMe API docs for
+  the full attachment schema.
+</ParamField>
+
+**Example usage**
+
+> "Send 'See you at 7pm!' to group 1234567."
+
+```text
+send_message(group_id="1234567", text="See you at 7pm!")
+```
+
+---
+
+## list_direct_messages
+
+List direct messages with another user.
+
+<ParamField path="other_user_id" type="string" required>
+  The ID of the other user in the conversation.
+</ParamField>
+
+<ParamField path="before_id" type="string">
+  Return messages created before this message ID.
+</ParamField>
+
+<ParamField path="since_id" type="string">
+  Return messages created after this message ID.
+</ParamField>
+
+**Example usage**
+
+> "Show my direct message history with user 9876543."
+
+```text
+list_direct_messages(other_user_id="9876543")
+```
+
+---
+
+## send_direct_message
+
+Send a direct message to another user.
+
+<ParamField path="recipient_id" type="string" required>
+  The user ID of the recipient.
+</ParamField>
+
+<ParamField path="text" type="string" required>
+  Message text. Maximum 1000 characters.
+</ParamField>
+
+<ParamField path="source_guid" type="string">
+  Unique ID to prevent duplicate sends. A UUID is auto-generated if you leave
+  this blank.
+</ParamField>
+
+<ParamField path="attachments" type="object[]">
+  Optional list of attachment objects.
+</ParamField>
+
+**Example usage**
+
+> "Send 'Are you coming tonight?' as a DM to user 9876543."
+
+```text
+send_direct_message(recipient_id="9876543", text="Are you coming tonight?")
+```
+
+---
+
+## list_chats
+
+List the authenticated user's direct message conversations, sorted by most recent activity.
+
+<ParamField path="page" type="number" default="1">
+  Page number for pagination.
+</ParamField>
+
+<ParamField path="per_page" type="number" default="20">
+  Number of chats per page.
+</ParamField>
+
+**Example usage**
+
+> "Show my recent direct message conversations."
+
+```text
+list_chats(page=1, per_page=20)
+```
+
+---
+
+## like_message
+
+Like a message.
+
+<Tip>
+  `conversation_id` is the group ID for group messages, or the direct message
+  conversation ID for DMs.
+</Tip>
+
+<ParamField path="conversation_id" type="string" required>
+  The group ID or direct message conversation ID.
+</ParamField>
+
+<ParamField path="message_id" type="string" required>
+  The ID of the message to like.
+</ParamField>
+
+**Example usage**
+
+> "Like message 111222 in group 1234567."
+
+```text
+like_message(conversation_id="1234567", message_id="111222")
+```
+
+---
+
+## unlike_message
+
+Unlike a previously liked message.
+
+<ParamField path="conversation_id" type="string" required>
+  The group ID or direct message conversation ID.
+</ParamField>
+
+<ParamField path="message_id" type="string" required>
+  The ID of the message to unlike.
+</ParamField>
+
+**Example usage**
+
+> "Remove my like from message 111222 in group 1234567."
+
+```text
+unlike_message(conversation_id="1234567", message_id="111222")
+```

@@ -60,6 +60,9 @@ force-single-line = true
 exclude_dirs = ["tests"]
 skips = []
 
+[tool.hatch.build.targets.wheel]
+exclude = ["docs"]
+
 [tool.commitizen]
 name = "cz_conventional_commits"
 tag_format = "$version"

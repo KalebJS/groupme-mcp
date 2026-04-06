@@ -1,0 +1,113 @@
+---
+title: "Bots"
+description: "Tools for creating and managing GroupMe bots."
+---
+
+<Info>
+  A GroupMe bot is a named account that belongs to a group and can post messages
+  independently of any user. Bots are useful for automated notifications,
+  integrations, and other programmatic posting scenarios. Each bot is tied to a
+  single group and posts messages via its `bot_id`.
+</Info>
+
+## create_bot
+
+Create a new bot in a group.
+
+<ParamField path="name" type="string" required>
+  The bot's display name.
+</ParamField>
+
+<ParamField path="group_id" type="string" required>
+  The ID of the group the bot belongs to.
+</ParamField>
+
+<ParamField path="avatar_url" type="string">
+  Optional avatar image URL for the bot.
+</ParamField>
+
+<ParamField path="callback_url" type="string">
+  Optional URL to receive message callbacks. GroupMe will POST new group
+  messages to this endpoint.
+</ParamField>
+
+<ParamField path="dm_notification" type="boolean" default="false">
+  Whether the bot should receive DM notifications.
+</ParamField>
+
+**Example usage**
+
+> "Create a bot called 'Alerts Bot' in group 1234567 that posts to my webhook."
+
+```text
+create_bot(
+  name="Alerts Bot",
+  group_id="1234567",
+  callback_url="https://example.com/webhook"
+)
+```
+
+---
+
+## post_as_bot
+
+Post a message as a bot.
+
+<ParamField path="bot_id" type="string" required>
+  The ID of the bot.
+</ParamField>
+
+<ParamField path="text" type="string" required>
+  Message text.
+</ParamField>
+
+<ParamField path="picture_url" type="string">
+  Optional image URL to attach to the message.
+</ParamField>
+
+**Example usage**
+
+> "Have bot abc123 post 'Deployment complete!' to its group."
+
+```text
+post_as_bot(bot_id="abc123", text="Deployment complete!")
+```
+
+---
+
+## list_bots
+
+List all bots created by the authenticated user.
+
+This tool takes no parameters.
+
+**Example usage**
+
+> "Show me all the bots I've created."
+
+```text
+list_bots()
+```
+
+---
+
+## destroy_bot
+
+Delete a bot.
+
+<Warning>
+  This action is irreversible. The bot and its `bot_id` cannot be recovered
+  after deletion.
+</Warning>
+
+<ParamField path="bot_id" type="string" required>
+  The ID of the bot to delete.
+</ParamField>
+
+**Example usage**
+
+> "Delete bot abc123."
+
+```text
+destroy_bot(bot_id="abc123")
+```

@@ -1,0 +1,101 @@
+---
+title: "Authentication"
+description: "Get a GroupMe access token and pass it to the GroupMe MCP server."
+---
+
+GroupMe MCP authenticates with the GroupMe API using an access token. You must set the `GROUPME_TOKEN` environment variable before starting the server. If the variable is missing, the server prints an error message and exits with code 1.
+
+<Warning>
+  Treat your GroupMe token like a password. Anyone who has it can read your
+  messages and act on your behalf. Never commit it to source control or share it
+  publicly.
+</Warning>
+
+## Get a token from the GroupMe developer site
+
+The quickest way to get a token is directly from the GroupMe developer site:
+
+1. Go to [dev.groupme.com](https://dev.groupme.com) and sign in.
+2. Click your name in the top-right corner and select **Access Token**.
+3. Copy the token shown on the page.
+
+## Get a token with the OAuth helper script
+
+If you prefer a proper OAuth flow — for example, to obtain a token without logging into the developer site — use the included `oauth/get_token.py` script. It uses the GroupMe implicit OAuth flow and requires only the Python standard library.
+
+<Steps>
+  <Step title="Create an application">
+    Go to [dev.groupme.com/applications](https://dev.groupme.com/applications) and create a new application.
+  </Step>
+  <Step title="Set the callback URL">
+    In your application settings, set the callback URL to:
+
+    ```
+    http://localhost:8080/callback
+    ```
+
+  </Step>
+  <Step title="Run the helper script">
+    From the root of the repository, run:
+
+    ```bash
+    python oauth/get_token.py --client-id YOUR_CLIENT_ID
+    ```
+
+    You can also pass the client ID as an environment variable:
+
+    ```bash
+    GROUPME_CLIENT_ID=YOUR_CLIENT_ID python oauth/get_token.py
+    ```
+
+  </Step>
+  <Step title="Authorize and copy your token">
+    The script opens your browser to the GroupMe authorization page at `https://oauth.groupme.com/oauth/authorize`. After you approve access, GroupMe redirects to the local callback server and the script prints your token:
+
+    ```
+    Access token:
+
+      your_token_here
+
+    Set it with:  export GROUPME_TOKEN=your_token_here
+    ```
+
+    Copy the `export` command from the output and run it in your shell to set the token.
+
+  </Step>
+</Steps>
+
+## Pass the token to the server
+
+### Claude Desktop
+
+Set `GROUPME_TOKEN` in the `env` block of your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "groupme": {
+      "command": "uvx",
+      "args": ["groupme-mcp"],
+      "env": {
+        "GROUPME_TOKEN": "<your-token>"
+      }
+    }
+  }
+}
+```
+
+### Local development
+
+Export the variable in your shell before running the server:
+
+```bash
+export GROUPME_TOKEN=your_token_here
+uv run mcp dev src/groupme_mcp/main.py
+```
+
+Or set it inline:
+
+```bash
+GROUPME_TOKEN=your_token_here uv run mcp dev src/groupme_mcp/main.py
+```

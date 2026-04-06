@@ -2,19 +2,21 @@
 
 A [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that wraps the [GroupMe API v3](https://dev.groupme.com/docs/v3), letting AI assistants read and send GroupMe messages, manage groups, interact with bots, and more.
 
+**[Documentation](https://groupme-mcp.docs.kalebjs.dev)**
+
 ## Tools
 
-| Category | Tools |
-|---|---|
-| **Groups** | `list_groups`, `list_former_groups`, `get_group`, `create_group`, `update_group`, `destroy_group`, `join_group`, `rejoin_group` |
-| **Members** | `add_members`, `get_member_results`, `remove_member`, `update_membership` |
-| **Messages** | `list_messages`, `send_message` |
-| **Direct Messages** | `list_direct_messages`, `send_direct_message` |
-| **Chats** | `list_chats` |
-| **Likes** | `like_message`, `unlike_message` |
-| **Bots** | `create_bot`, `post_as_bot`, `list_bots`, `destroy_bot` |
-| **Users** | `get_me`, `update_user` |
-| **Blocks** | `list_blocks`, `check_block`, `create_block`, `delete_block` |
+| Category            | Tools                                                                                                                           |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| **Groups**          | `list_groups`, `list_former_groups`, `get_group`, `create_group`, `update_group`, `destroy_group`, `join_group`, `rejoin_group` |
+| **Members**         | `add_members`, `get_member_results`, `remove_member`, `update_membership`                                                       |
+| **Messages**        | `list_messages`, `send_message`                                                                                                 |
+| **Direct Messages** | `list_direct_messages`, `send_direct_message`                                                                                   |
+| **Chats**           | `list_chats`                                                                                                                    |
+| **Likes**           | `like_message`, `unlike_message`                                                                                                |
+| **Bots**            | `create_bot`, `post_as_bot`, `list_bots`, `destroy_bot`                                                                         |
+| **Users**           | `get_me`, `update_user`                                                                                                         |
+| **Blocks**          | `list_blocks`, `check_block`, `create_block`, `delete_block`                                                                    |
 
 ## Skill
 

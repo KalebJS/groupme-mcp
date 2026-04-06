@@ -1,0 +1,124 @@
+---
+title: "Members"
+description: "Tools for adding, removing, and updating group membership."
+---
+
+Use these tools to manage who belongs to a GroupMe group — add new members, remove existing ones, poll async add results, and update your own nickname.
+
+<Note>
+  Adding members is an asynchronous operation. `add_members` returns a
+  `results_id` that you must pass to `get_member_results` to check whether the
+  operation succeeded.
+</Note>
+
+## add_members
+
+Add one or more members to a group. This is an async operation — the API queues the request and returns a `results_id`. Poll with `get_member_results` to retrieve the outcome.
+
+<ParamField path="group_id" type="string" required>
+  The ID of the group.
+</ParamField>
+
+<ParamField path="members" type="object[]" required>
+  List of member objects to add. Each object must include `nickname` and at least one of `user_id`, `phone_number`, or `email`. You may also include an optional `guid` for client-side tracking.
+
+```json
+[
+  {
+    "nickname": "Alice",
+    "user_id": "1234567"
+  },
+  {
+    "nickname": "Bob",
+    "phone_number": "+15550001234"
+  }
+]
+```
+
+</ParamField>
+
+**Example usage**
+
+> "Add Alice (user ID 1234567) and Bob (phone +15550001234) to group 9876543."
+
+```text
+add_members(
+  group_id="9876543",
+  members=[
+    {"nickname": "Alice", "user_id": "1234567"},
+    {"nickname": "Bob", "phone_number": "+15550001234"}
+  ]
+)
+```
+
+---
+
+## get_member_results
+
+Poll the result of a previous `add_members` request.
+
+<Note>
+  The GroupMe API may return a `503` while the add operation is still
+  processing. Retry after a short delay if you receive one.
+</Note>
+
+<ParamField path="group_id" type="string" required>
+  The ID of the group.
+</ParamField>
+
+<ParamField path="results_id" type="string" required>
+  The GUID returned from `add_members`.
+</ParamField>
+
+**Example usage**
+
+> "Check whether the add-members request with results ID abc-123 for group 9876543 has finished."
+
+```text
+get_member_results(group_id="9876543", results_id="abc-123")
+```
+
+---
+
+## remove_member
+
+Remove a member from a group.
+
+<ParamField path="group_id" type="string" required>
+  The ID of the group.
+</ParamField>
+
+<ParamField path="membership_id" type="string" required>
+  The membership ID of the member to remove. This is distinct from the user's
+  `user_id` — it is the `id` field on the membership object within the group.
+</ParamField>
+
+**Example usage**
+
+> "Remove the member with membership ID 555 from group 9876543."
+
+```text
+remove_member(group_id="9876543", membership_id="555")
+```
+
+---
+
+## update_membership
+
+Update your own nickname in a group.
+
+<ParamField path="group_id" type="string" required>
+  The ID of the group.
+</ParamField>
+
+<ParamField path="nickname" type="string" required>
+  Your new nickname (1–50 characters).
+</ParamField>
+
+**Example usage**
+
+> "Change my nickname in group 9876543 to 'Trail Boss'."
+
+```text
+update_membership(group_id="9876543", nickname="Trail Boss")
+```

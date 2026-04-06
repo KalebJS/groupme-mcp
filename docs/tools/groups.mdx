@@ -1,0 +1,195 @@
+---
+title: "Groups"
+description: "Tools for creating, reading, updating, and deleting GroupMe groups."
+---
+
+Use these tools to manage your GroupMe groups — list active and former groups, create new ones, update settings, and control membership via share tokens.
+
+## list_groups
+
+List the authenticated user's active groups.
+
+<ParamField path="page" type="number" default="1">
+  Page number for pagination.
+</ParamField>
+
+<ParamField path="per_page" type="number" default="10">
+  Number of groups per page (max 500).
+</ParamField>
+
+<ParamField path="omit" type="string">
+  Comma-separated list of fields to omit from the response (e.g.
+  `"memberships"`).
+</ParamField>
+
+**Example usage**
+
+> "Show me my first page of groups, 20 per page."
+
+```text
+list_groups(page=1, per_page=20)
+```
+
+---
+
+## list_former_groups
+
+List groups the authenticated user has previously left.
+
+This tool takes no parameters.
+
+**Example usage**
+
+> "What groups have I left in the past?"
+
+```text
+list_former_groups()
+```
+
+---
+
+## get_group
+
+Get details for a specific group.
+
+<ParamField path="group_id" type="string" required>
+  The ID of the group.
+</ParamField>
+
+**Example usage**
+
+> "Give me the details for group 1234567."
+
+```text
+get_group(group_id="1234567")
+```
+
+---
+
+## create_group
+
+Create a new group.
+
+<ParamField path="name" type="string" required>
+  Name of the group.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Optional description for the group.
+</ParamField>
+
+<ParamField path="image_url" type="string">
+  Optional avatar image URL for the group.
+</ParamField>
+
+<ParamField path="share" type="boolean" default="false">
+  Whether to enable a share URL for the group.
+</ParamField>
+
+**Example usage**
+
+> "Create a new group called 'Weekend Hiking' with a share link enabled."
+
+```text
+create_group(name="Weekend Hiking", share=true)
+```
+
+---
+
+## update_group
+
+Update a group's settings. Only the fields you provide are changed; leave a field blank to keep the current value.
+
+<ParamField path="group_id" type="string" required>
+  The ID of the group.
+</ParamField>
+
+<ParamField path="name" type="string">
+  New name (leave blank to keep current).
+</ParamField>
+
+<ParamField path="description" type="string">
+  New description (leave blank to keep current).
+</ParamField>
+
+<ParamField path="image_url" type="string">
+  New avatar image URL (leave blank to keep current).
+</ParamField>
+
+<ParamField path="share" type="boolean">
+  Enable or disable the share URL.
+</ParamField>
+
+<ParamField path="office_mode" type="boolean">
+  Enable or disable office mode.
+</ParamField>
+
+**Example usage**
+
+> "Rename group 1234567 to 'Summer Hiking' and disable the share link."
+
+```text
+update_group(group_id="1234567", name="Summer Hiking", share=false)
+```
+
+---
+
+## destroy_group
+
+Permanently delete a group.
+
+<Warning>
+  This action is irreversible. Only the group creator can delete a group.
+</Warning>
+
+<ParamField path="group_id" type="string" required>
+  The ID of the group to delete.
+</ParamField>
+
+**Example usage**
+
+> "Delete group 1234567 permanently."
+
+```text
+destroy_group(group_id="1234567")
+```
+
+---
+
+## join_group
+
+Join a group using its share token.
+
+<ParamField path="group_id" type="string" required>
+  The ID of the group.
+</ParamField>
+
+<ParamField path="share_token" type="string" required>
+  The share token from the group's share URL.
+</ParamField>
+
+**Example usage**
+
+> "Join group 1234567 using share token abc123."
+
+```text
+join_group(group_id="1234567", share_token="abc123")
+```
+
+---
+
+## rejoin_group
+
+Rejoin a group you previously left.
+
+<ParamField path="group_id" type="string" required>
+  The ID of the group to rejoin.
+</ParamField>
+
+**Example usage**
+
+> "Rejoin the group with ID 1234567 that I left last month."
+
+```text
+rejoin_group(group_id="1234567")
+```

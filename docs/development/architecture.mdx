@@ -1,0 +1,139 @@
+---
+title: "Architecture"
+description: "How the GroupMe MCP server is structured and how its components fit together."
+---
+
+## Overview
+
+GroupMe MCP is a thin [MCP](https://modelcontextprotocol.io) server layered over the [GroupMe API v3](https://dev.groupme.com/docs/v3). It exposes GroupMe operations as MCP tools that any compatible AI client can call.
+
+The server is built with:
+
+- **FastMCP** from the `mcp` library — handles tool registration and the MCP protocol
+- **httpx** — async HTTP client for all GroupMe API requests
+- **stdio transport** — the server communicates with MCP clients via standard input/output
+
+The source is split across three files under `src/groupme_mcp/`.
+
+## Source structure
+
+```
+src/groupme_mcp/
+├── main.py      # Entry point
+├── server.py    # MCP tool definitions
+└── client.py    # GroupMe HTTP client
+```
+
+## client.py — GroupMeClient
+
+`GroupMeClient` is an async HTTP client that wraps the GroupMe REST API.
+
+**Key details:**
+
+- Reads `GROUPME_TOKEN` from the environment at `__init__` time — the server will not start without it
+- Base URL is `https://api.groupme.com/v3`
+- Three private helpers — `_get`, `_post`, and `_delete` — handle all HTTP communication. They inject the token as a query parameter (`?token=...`) on every request and call `raise_for_status()` so HTTP errors propagate as exceptions
+- All methods are `async` and open a fresh `httpx.AsyncClient` per request
+
+Example method:
+
+```python
+async def list_groups(self, page: int = 1, per_page: int = 10, omit: str = "") -> dict:
+    params: dict = {"page": page, "per_page": per_page}
+    if omit:
+        params["omit"] = omit
+    return await self._get("/groups", **params)
+```
+
+The `_get` helper adds `token` to `params` and sends the request:
+
+```python
+async def _get(self, path: str, **params: Any) -> dict:
+    params["token"] = self.token
+    async with httpx.AsyncClient() as client:
+        r = await client.get(f"{BASE_URL}{path}", params=params)
+        r.raise_for_status()
+        return r.json()
+```
+
+## server.py — MCP tools
+
+`server.py` defines all MCP tools using FastMCP's `@mcp.tool()` decorator. A single `GroupMeClient` instance is created at module load time and shared across all tools.
+
+**Key details:**
+
+- Each tool is a thin shim — it validates or transforms arguments if needed, then delegates directly to the corresponding `GroupMeClient` method
+- Tools that send messages (`send_message`, `send_direct_message`) auto-generate a `source_guid` UUID when the caller omits it. This prevents the GroupMe API from rejecting duplicate sends if the tool is called twice with the same payload
+- Docstrings are required — FastMCP uses the docstring and `Args:` block to generate the tool's JSON schema exposed to MCP clients
+
+Example tool:
+
+```python
+@mcp.tool()
+async def send_message(
+    group_id: str,
+    text: str,
+    source_guid: str = "",
+    attachments: list[dict] | None = None,
+) -> dict:
+    """Send a message to a group.
+
+    Args:
+        group_id: The ID of the group.
+        text: Message text (max 1000 characters).
+        source_guid: Unique ID to prevent duplicate sends. Auto-generated if blank.
+        attachments: Optional list of attachment objects.
+    """
+    if not source_guid:
+        source_guid = str(uuid.uuid4())
+    return await client.send_message(
+        group_id=group_id,
+        text=text,
+        source_guid=source_guid,
+        attachments=attachments,
+    )
+```
+
+## main.py — Entry point
+
+`main.py` is the entrypoint invoked by the `groupme-mcp` script (defined in `pyproject.toml`).
+
+It performs one check before starting: if `GROUPME_TOKEN` is not set in the environment, it prints a helpful error message to stderr and exits with code 1. This prevents a confusing crash inside `GroupMeClient.__init__`.
+
+```python
+def main() -> None:
+    if "GROUPME_TOKEN" not in os.environ:
+        print("Error: GROUPME_TOKEN is not set.", file=sys.stderr)
+        print("", file=sys.stderr)
+        print("Get a token at https://dev.groupme.com/applications", file=sys.stderr)
+        print("Then run:  GROUPME_TOKEN=<token> groupme-mcp", file=sys.stderr)
+        sys.exit(1)
+
+    from groupme_mcp.server import mcp
+
+    mcp.run(transport="stdio")
+```
+
+The import of `server` is intentionally deferred — it instantiates `GroupMeClient`, which reads `GROUPME_TOKEN`. Importing before the check would cause a `KeyError` instead of the friendly error message.
+
+## Transport
+
+The server uses **stdio transport** (`transport="stdio"`). MCP clients such as Claude Desktop communicate with the server by spawning it as a subprocess and writing/reading JSON-RPC messages over stdin and stdout.
+
+This is the standard transport for locally installed MCP servers. It requires no network port, no authentication beyond the process boundary, and works with any MCP-compatible client that supports subprocess execution.
+
+## Testing approach
+
+Tests are in `tests/` and split into two files:
+
+- `tests/test_client.py` — tests at the HTTP level, verifying that `GroupMeClient` methods build the correct URLs and pass the correct parameters
+- `tests/test_server.py` — tests at the tool level, verifying that tool functions call the correct client methods with the correct arguments
+
+Both files use `pytest-httpx` (`HTTPXMock`) to intercept outgoing `httpx` requests at the transport level, so no real GroupMe API calls are made. `asyncio_mode = "auto"` is set in `pyproject.toml`, so `async` test functions run automatically without `@pytest.mark.asyncio`.
+
+<Note>
+  Both test files call `os.environ.setdefault("GROUPME_TOKEN", "test-token")`
+  before importing anything from `groupme_mcp`. This must come first, because
+  `GroupMeClient` reads the token at `__init__` time and the module is imported
+  at collection time.
+</Note>

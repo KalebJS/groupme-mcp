@@ -1,0 +1,130 @@
+---
+title: "Contributing"
+description: "Set up a local development environment and contribute to GroupMe MCP."
+---
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+- **Python 3.12+** — check with `python --version`
+- **uv** — the package manager used for this project. Install it from [docs.astral.sh/uv](https://docs.astral.sh/uv)
+- A **GroupMe access token** — see [Authentication](/authentication) for how to get one
+
+## Local setup
+
+<Steps>
+  <Step title="Clone the repository">
+    ```bash
+    git clone https://github.com/KalebJS/groupme-mcp
+    cd groupme-mcp
+    ```
+  </Step>
+  <Step title="Install dev dependencies">
+    ```bash
+    uv sync --group dev
+    ```
+
+    This installs all runtime and development dependencies, including pytest, ruff, bandit, and pre-commit.
+
+  </Step>
+  <Step title="Install pre-commit hooks">
+    ```bash
+    uv run --group dev pre-commit install
+    ```
+
+    This installs the git hooks that run ruff and bandit automatically before each commit.
+
+  </Step>
+  <Step title="Set your GroupMe token">
+    ```bash
+    export GROUPME_TOKEN=<your-token>
+    ```
+  </Step>
+  <Step title="Run the server">
+    ```bash
+    GROUPME_TOKEN=<your-token> uv run mcp dev src/groupme_mcp/main.py
+    ```
+
+    This starts the server in development mode.
+
+  </Step>
+</Steps>
+
+<Tip>
+  `uv run mcp dev` opens the **MCP Inspector** in your browser automatically.
+  The Inspector lets you call any tool manually and inspect request and response
+  payloads — no AI client required.
+</Tip>
+
+## Running tests
+
+Tests use `pytest-httpx` to mock HTTP requests and `pytest-asyncio` with `asyncio_mode = "auto"` so async test functions run without needing `@pytest.mark.asyncio`.
+
+<Note>
+  Test files set `GROUPME_TOKEN` in the environment using
+  `os.environ.setdefault` before importing `client`. Make sure this is present
+  in any new test file you create.
+</Note>
+
+**Run all tests:**
+
+```bash
+uv run --group dev pytest tests/ -v
+```
+
+**Run a single test:**
+
+```bash
+uv run --group dev pytest tests/test_client.py::test_list_groups -v
+```
+
+Tests use `HTTPXMock` to intercept outgoing `httpx` requests at the transport level. No real GroupMe API calls are made during the test suite.
+
+## Lint and format
+
+The project uses [ruff](https://docs.astral.sh/ruff) for linting and formatting, and [bandit](https://bandit.readthedocs.io) for security checks. Both run as pre-commit hooks.
+
+To run all checks manually against every file:
+
+```bash
+uv run --group dev pre-commit run --all-files
+```
+
+This runs:
+
+- `ruff --fix` — lint and auto-fix
+- `ruff-format` — format code
+- `bandit -c pyproject.toml` — security scan (excludes `tests/`)
+
+## Adding a new tool
+
+<Steps>
+  <Step title="Add the client method">
+    Add an `async` method to `GroupMeClient` in `src/groupme_mcp/client.py`. Use the existing `_get`, `_post`, or `_delete` helpers to make the request — they inject the token automatically.
+
+    ```python
+    async def my_new_endpoint(self, group_id: str) -> dict:
+        return await self._get(f"/groups/{group_id}/something")
+    ```
+
+  </Step>
+  <Step title="Add the MCP tool">
+    Add a `@mcp.tool()` function in `src/groupme_mcp/server.py` that delegates to the client method. Include a docstring with an `Args:` block — FastMCP uses it to generate the tool's schema.
+
+    ```python
+    @mcp.tool()
+    async def my_new_tool(group_id: str) -> dict:
+        """Short description of what this tool does.
+
+        Args:
+            group_id: The ID of the group.
+        """
+        return await client.my_new_endpoint(group_id)
+    ```
+
+  </Step>
+  <Step title="Add tests">
+    Add an HTTP-level test in `tests/test_client.py` that uses `HTTPXMock` to mock the GroupMe API response, and a tool-level test in `tests/test_server.py` that calls the tool function directly.
+  </Step>
+</Steps>

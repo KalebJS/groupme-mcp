@@ -1,0 +1,61 @@
+---
+title: "GroupMe MCP"
+description: "An MCP server that brings GroupMe to your AI assistant — read messages, manage groups, send DMs, and automate bots."
+---
+
+GroupMe MCP is a [Model Context Protocol](https://modelcontextprotocol.io) server wrapping the [GroupMe API v3](https://dev.groupme.com/docs/v3). Connect it to Claude Desktop or any MCP-compatible AI client and give your assistant full access to your GroupMe account.
+
+<CardGroup cols={2}>
+  <Card title="Quick Start" icon="rocket" href="/quickstart">
+    Get GroupMe MCP running with Claude Desktop in minutes.
+  </Card>
+  <Card title="Authentication" icon="key" href="/authentication">
+    Get your GroupMe token and connect to the server.
+  </Card>
+  <Card title="Tool Reference" icon="wrench" href="/tools/groups">
+    Explore all 29 available tools across groups, messages, bots, and more.
+  </Card>
+  <Card
+    title="Architecture"
+    icon="diagram-project"
+    href="/development/architecture"
+  >
+    Understand how the MCP server is structured under the hood.
+  </Card>
+</CardGroup>
+
+## What you can do
+
+GroupMe MCP exposes 29 tools covering the full GroupMe API v3:
+
+<CardGroup cols={2}>
+  <Card title="Groups" icon="users" href="/tools/groups">
+    List, create, update, join, and manage groups.
+  </Card>
+  <Card title="Messages" icon="message" href="/tools/messages">
+    Read and send group messages and direct messages.
+  </Card>
+  <Card title="Bots" icon="robot" href="/tools/bots">
+    Create bots and post messages on their behalf.
+  </Card>
+  <Card title="Users & Blocks" icon="user-shield" href="/tools/users-blocks">
+    Manage your profile and block/unblock users.
+  </Card>
+</CardGroup>
+
+## Getting started
+
+<Steps>
+  <Step title="Get a GroupMe token">
+    Visit [dev.groupme.com](https://dev.groupme.com) to get an access token, or
+    run the included OAuth helper script.
+  </Step>
+  <Step title="Add to Claude Desktop">
+    Add the server configuration to your `claude_desktop_config.json` with your
+    token.
+  </Step>
+  <Step title="Start chatting">
+    Ask your AI assistant to list your groups, read messages, send a reply, or
+    create a bot — it's all available instantly.
+  </Step>
+</Steps>

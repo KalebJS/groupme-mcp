@@ -1,0 +1,64 @@
+---
+title: "Quick start"
+description: "Get GroupMe MCP running with Claude Desktop in minutes."
+---
+
+This guide walks you through installing GroupMe MCP and connecting it to Claude Desktop.
+
+## Install with Claude Desktop
+
+<Steps>
+  <Step title="Get a GroupMe access token">
+    You need a GroupMe access token before you can run the server. See the [Authentication](/authentication) page for the two ways to get one.
+  </Step>
+  <Step title="Add the server to Claude Desktop">
+    Open `~/Library/Application Support/Claude/claude_desktop_config.json` (create it if it doesn't exist) and add the following configuration:
+
+    ```json
+    {
+      "mcpServers": {
+        "groupme": {
+          "command": "uvx",
+          "args": ["groupme-mcp"],
+          "env": {
+            "GROUPME_TOKEN": "<your-token>"
+          }
+        }
+      }
+    }
+    ```
+
+    Replace `<your-token>` with your actual GroupMe access token.
+
+    On Windows, the config file is located at `%APPDATA%\Claude\claude_desktop_config.json`.
+
+  </Step>
+  <Step title="Restart Claude Desktop">
+    Quit and reopen Claude Desktop. The GroupMe MCP server starts automatically when Claude launches.
+  </Step>
+  <Step title="Verify the connection">
+    In a new Claude conversation, ask something like:
+
+    > "List my GroupMe groups."
+
+    Claude will call the `list_groups` tool and return your groups. If you see a tool call appear in the response, the server is connected and working.
+
+  </Step>
+</Steps>
+
+## Local development
+
+If you want to run the server locally from source — for example, to inspect tool calls or develop new tools — clone the repository and use the MCP Inspector:
+
+```bash
+git clone https://github.com/KalebJS/groupme-mcp
+cd groupme-mcp
+export GROUPME_TOKEN=<your-token>
+uv run mcp dev src/groupme_mcp/main.py
+```
+
+<Tip>
+  `uv run mcp dev` opens the MCP Inspector in your browser. The Inspector lets
+  you call any tool manually and inspect request and response payloads without
+  needing an AI client.
+</Tip>
