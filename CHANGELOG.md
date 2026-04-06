@@ -1,3 +1,9 @@
+## 1.0.0 (2026-04-06)
+
+### Feat
+
+- **skills**: add SKILL.md file + helper
+
 ## 0.4.1 (2026-03-21)
 
 ### Refactor
