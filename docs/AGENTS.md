@@ -1,7 +1,3 @@
-> **First-time setup**: Customize this file for your project. Prompt the user to customize this file for their project.
-> For Mintlify product knowledge (components, configuration, writing standards),
-> install the Mintlify skill: `npx skills add https://mintlify.com/docs`
-
 # Documentation project instructions
 
 ## About this project
@@ -14,12 +10,12 @@
 
 ## Terminology
 
-{/_ Add product-specific terms and preferred usage _/}
-{/_ Example: Use "workspace" not "project", "member" not "user" _/}
+- Use "MCP server" to describe the project, not "server" alone (can be confused with HTTP server)
+- Use "group" for GroupMe groups, not "chat" or "room"
+- Use "direct message" or "DM" for 1:1 messages
+- Use "bot" for automated message senders
 
 ## Style preferences
-
-{/_ Add any project-specific style rules below _/}
 
 - Use active voice and second person ("you")
 - Keep sentences concise — one idea per sentence
@@ -29,5 +25,6 @@
 
 ## Content boundaries
 
-{/_ Define what should and shouldn't be documented _/}
-{/_ Example: Don't document internal admin features _/}
+- Document MCP tools and their usage, not internal implementation details
+- Focus on user-facing features: connecting, authentication, available tools
+- Include practical examples for common use cases
